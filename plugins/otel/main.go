@@ -14,6 +14,7 @@ import (
 	"github.com/maximhq/bifrost/core/schemas"
 	"github.com/maximhq/bifrost/framework/modelcatalog"
 	"github.com/maximhq/bifrost/framework/streaming"
+	"github.com/valyala/fasthttp"
 )
 
 // logger is the logger for the OTEL plugin
@@ -143,9 +144,9 @@ func (p *OtelPlugin) GetName() string {
 	return PluginName
 }
 
-// TransportInterceptor is not used for this plugin
-func (p *OtelPlugin) TransportInterceptor(ctx *context.Context, url string, headers map[string]string, body map[string]any) (map[string]string, map[string]any, error) {
-	return headers, body, nil
+// HTTPTransportMiddleware is not used for this plugin
+func (p *OtelPlugin) HTTPTransportMiddleware(next fasthttp.RequestHandler) fasthttp.RequestHandler {
+	return nil
 }
 
 // ValidateConfig function for the OTEL plugin

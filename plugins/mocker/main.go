@@ -16,6 +16,7 @@ import (
 	"github.com/jaswdr/faker/v2"
 	bifrost "github.com/maximhq/bifrost/core"
 	"github.com/maximhq/bifrost/core/schemas"
+	"github.com/valyala/fasthttp"
 )
 
 const (
@@ -480,9 +481,9 @@ func validateErrorResponse(errorContent ErrorResponse) error {
 func (p *MockerPlugin) GetName() string {
 	return PluginName
 }
-// TransportInterceptor is not used for this plugin
-func (p *MockerPlugin) TransportInterceptor(ctx *context.Context, url string, headers map[string]string, body map[string]any) (map[string]string, map[string]any, error) {
-	return headers, body, nil
+// HTTPTransportMiddleware is not used for this plugin
+func (p *MockerPlugin) HTTPTransportMiddleware(next fasthttp.RequestHandler) fasthttp.RequestHandler {
+	return nil
 }
 
 // PreHook intercepts requests and applies mocking rules based on configuration

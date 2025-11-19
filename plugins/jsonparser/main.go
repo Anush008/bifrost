@@ -8,6 +8,7 @@ import (
 
 	bifrost "github.com/maximhq/bifrost/core"
 	"github.com/maximhq/bifrost/core/schemas"
+	"github.com/valyala/fasthttp"
 )
 
 const (
@@ -84,9 +85,9 @@ func (p *JsonParserPlugin) GetName() string {
 	return PluginName
 }
 
-// TransportInterceptor is not used for this plugin
-func (p *JsonParserPlugin) TransportInterceptor(ctx *context.Context, url string, headers map[string]string, body map[string]any) (map[string]string, map[string]any, error) {
-	return headers, body, nil
+// HTTPTransportMiddleware is not used for this plugin
+func (p *JsonParserPlugin) HTTPTransportMiddleware(next fasthttp.RequestHandler) fasthttp.RequestHandler {
+	return nil
 }
 
 // PreHook is not used for this plugin as we only process responses

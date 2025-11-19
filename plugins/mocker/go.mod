@@ -5,6 +5,7 @@ go 1.24.3
 require (
 	github.com/jaswdr/faker/v2 v2.8.0
 	github.com/maximhq/bifrost/core v1.2.26
+	github.com/valyala/fasthttp v1.67.0
 )
 
 require (
@@ -42,7 +43,6 @@ require (
 	github.com/spf13/cast v1.10.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.67.0 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	golang.org/x/arch v0.22.0 // indirect

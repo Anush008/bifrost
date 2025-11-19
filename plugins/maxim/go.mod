@@ -8,7 +8,10 @@ require (
 	github.com/maximhq/maxim-go v0.1.14
 )
 
-require github.com/google/uuid v1.6.0
+require (
+	github.com/google/uuid v1.6.0
+	github.com/valyala/fasthttp v1.67.0
+)
 
 require (
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
@@ -81,7 +84,6 @@ require (
 	github.com/spf13/cast v1.10.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.67.0 // indirect
 	github.com/weaviate/weaviate v1.33.1 // indirect
 	github.com/weaviate/weaviate-go-client/v5 v5.5.0 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
