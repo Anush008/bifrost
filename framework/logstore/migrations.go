@@ -34,6 +34,9 @@ func triggerMigrations(ctx context.Context, db *gorm.DB) error {
 	if err := migrationAddPerformanceIndexes(ctx, db); err != nil {
 		return err
 	}
+	if err := migrationUpdateTimestampFormat(ctx, db); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -455,6 +458,53 @@ func migrationAddPerformanceIndexes(ctx context.Context, db *gorm.DB) error {
 	err := m.Migrate()
 	if err != nil {
 		return fmt.Errorf("error while adding performance indexes: %s", err.Error())
+	}
+	return nil
+}
+
+// migrationUpdateLogsTimestampFormat converts local timestamps to UTC timestamps in logs table
+func migrationUpdateTimestampFormat(ctx context.Context, db *gorm.DB) error {
+	// only run the migration for sqlite databases
+	dialect := db.Dialector.Name()
+	if dialect != "sqlite" {
+		return nil
+	}
+
+	opts := *migrator.DefaultOptions
+	opts.UseTransaction = true
+	m := migrator.New(db, &opts, []*migrator.Migration{{
+		ID: "logs_update_timestamp_format",
+		Migrate: func(tx *gorm.DB) error {
+			tx = tx.WithContext(ctx)
+
+			updateSQL := `
+				UPDATE logs
+				SET "timestamp" = strftime('%Y-%m-%dT%H:%M:%S', "timestamp", 'utc') || '.' || 
+                    CAST(CAST(strftime('%f', "timestamp") * 1000 AS INTEGER) % 1000 AS TEXT) || 'Z'
+				WHERE 
+					"timestamp" NOT LIKE '%Z' 
+					AND "timestamp" NOT LIKE '%+00%';
+				UPDATE logs
+				SET created_at = strftime('%Y-%m-%dT%H:%M:%S', created_at, 'utc') || '.' || 
+                    CAST(CAST(strftime('%f', created_at) * 1000 AS INTEGER) % 1000 AS TEXT) || 
+                    'Z'
+				WHERE 
+					created_at NOT LIKE '%Z' 
+					AND created_at NOT LIKE '%+00%';
+				`
+
+			result := tx.Exec(updateSQL)
+			if result.Error != nil {
+				return fmt.Errorf("failed to update timestamp values: %w", result.Error)
+			}
+
+			return nil
+		},
+	}})
+
+	err := m.Migrate()
+	if err != nil {
+		return fmt.Errorf("error while running update timestamp for logs migration: %s", err.Error())
 	}
 	return nil
 }
